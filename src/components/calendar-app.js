@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { logout } from "@/app/auth/actions";
 import { createClient } from "@/lib/supabase/client";
 import {
   formatWeekRange,
@@ -19,6 +18,8 @@ import { DayEvents } from "@/components/day-events";
 import { AiAddSheet } from "@/components/ai-add-sheet";
 import { TodosView } from "@/components/todos-view";
 import { TeamView } from "@/components/team-view";
+import { AccountMenu } from "@/components/account-menu";
+import { TodoQuickAdd } from "@/components/todo-quick-add";
 
 function profileMap(list) {
   return Object.fromEntries((list || []).map((item) => [item.id, item]));
@@ -219,6 +220,7 @@ export function CalendarApp({ user, profile }) {
 
   async function addTodo(title) {
     setBusy(true);
+    setError("");
     const { data, error: saveError } = await supabase
       .from("todos")
       .insert({ user_id: user.id, title, status: "pending" })
@@ -227,9 +229,10 @@ export function CalendarApp({ user, profile }) {
     setBusy(false);
     if (saveError) {
       setError(saveError.message);
-      return;
+      return false;
     }
     setTodos((current) => [data, ...current]);
+    return true;
   }
 
   async function updateTodo(id, status) {
@@ -299,17 +302,16 @@ export function CalendarApp({ user, profile }) {
     <div className="app-shell">
       <header className="app-header">
         <div>
-          <p className="eyebrow">{profile?.display_name || user.email}</p>
           <h1>{tab === "takvim" ? heading : tab === "todos" ? "Yapılacaklar" : "Ekip"}</h1>
           {tab === "takvim" && !mine ? (
             <p className="muted">{ownerLabel} · salt okunur</p>
           ) : null}
         </div>
-        <form action={logout}>
-          <button type="submit" className="btn-ghost">
-            Çıkış
-          </button>
-        </form>
+        <AccountMenu
+          email={user.email}
+          inviteCount={incoming.length}
+          onNavigate={setTab}
+        />
       </header>
 
       {tab === "takvim" ? (
@@ -422,41 +424,17 @@ export function CalendarApp({ user, profile }) {
         ) : null}
       </main>
 
-      <nav className="bottom-nav">
-        <button
-          type="button"
-          className={tab === "takvim" ? "is-active" : ""}
-          onClick={() => setTab("takvim")}
-        >
-          Takvim
-        </button>
-        <button
-          type="button"
-          className={tab === "todos" ? "is-active" : ""}
-          onClick={() => setTab("todos")}
-        >
-          Yapılacaklar
-        </button>
-        <button
-          type="button"
-          className={tab === "ekip" ? "is-active" : ""}
-          onClick={() => setTab("ekip")}
-        >
-          Ekip
-        </button>
-      </nav>
-
       <button
         type="button"
         className="fab"
-        aria-label="Etkinlik ekle"
+        aria-label="Hızlı ekle"
         onClick={() => setSheet({ type: "choose", day: cursor })}
       >
         <IconPlus className="h-8 w-8" />
       </button>
 
       {sheet?.type === "choose" ? (
-        <Modal title="Etkinlik ekle" onClose={() => setSheet(null)}>
+        <Modal title="Hızlı ekle" onClose={() => setSheet(null)}>
           <div className="choose-grid">
             <button
               type="button"
@@ -474,11 +452,34 @@ export function CalendarApp({ user, profile }) {
               <strong>Manuel ekle</strong>
               <span>Saatlik, günlük veya daha uzun</span>
             </button>
+            <button
+              type="button"
+              className="choose-card"
+              onClick={() => setSheet({ type: "todo" })}
+            >
+              <strong>Yapılacak ekle</strong>
+              <span>Günden bağımsız görev ekle</span>
+            </button>
           </div>
           {!mine ? (
             <p className="muted">Yeni etkinlik senin takvimine eklenir.</p>
           ) : null}
         </Modal>
+      ) : null}
+
+      {sheet?.type === "todo" ? (
+        <TodoQuickAdd
+          onClose={() => setSheet(null)}
+          saving={busy}
+          error={error}
+          onSubmit={async (title) => {
+            const ok = await addTodo(title);
+            if (ok) {
+              setSheet(null);
+              setTab("todos");
+            }
+          }}
+        />
       ) : null}
 
       {sheet?.type === "ai" ? (

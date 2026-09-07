@@ -54,7 +54,7 @@ textarea:focus {
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
-  padding: 1rem 1rem 8.5rem;
+  padding: 1rem 1rem 6rem;
 }
 
 .app-header {
@@ -63,6 +63,8 @@ textarea:focus {
   align-items: flex-start;
   gap: 1rem;
   margin-bottom: 1rem;
+  position: relative;
+  z-index: 20;
 }
 
 .eyebrow {
@@ -344,47 +346,106 @@ textarea:focus {
   border-color: var(--accent);
 }
 
-.bottom-nav {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 0.3rem;
-  padding: 0.7rem 1rem calc(0.7rem + env(safe-area-inset-bottom));
-  background: rgba(244, 239, 230, 0.94);
-  backdrop-filter: blur(12px);
-  border-top: 1px solid var(--line);
-}
-
-.bottom-nav button {
-  border: 0;
-  background: transparent;
-  padding: 0.7rem 0.3rem;
-  font-weight: 650;
-  color: var(--muted);
-}
-
-.bottom-nav button.is-active {
-  color: var(--ink);
-}
-
 .fab {
   position: fixed;
-  left: 50%;
-  bottom: calc(4.6rem + env(safe-area-inset-bottom));
+  right: 1.1rem;
+  bottom: calc(1.1rem + env(safe-area-inset-bottom));
+  left: auto;
   z-index: 30;
-  width: 4.25rem;
-  height: 4.25rem;
-  transform: translateX(-50%);
+  width: 4rem;
+  height: 4rem;
   border: 0;
-  border-radius: 1.4rem;
+  border-radius: 1.3rem;
   background: var(--fab);
   color: white;
   display: grid;
   place-items: center;
   box-shadow: 0 10px 24px rgba(234, 88, 12, 0.35);
+}
+
+.account-menu {
+  position: relative;
+}
+
+.account-trigger {
+  width: 2.7rem;
+  height: 2.7rem;
+  border: 1px solid var(--line);
+  background: white;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  color: var(--ink);
+}
+
+.menu-icon-desktop {
+  display: none;
+}
+
+.account-dropdown {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.5rem);
+  width: min(18rem, calc(100vw - 2rem));
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  padding: 0.45rem;
+  box-shadow: 0 12px 32px rgba(28, 25, 23, 0.12);
+  display: flex;
+  flex-direction: column;
+}
+
+.account-dropdown form {
+  width: 100%;
+}
+
+.account-email {
+  font-size: 0.8rem;
+  color: var(--muted);
+  padding: 0.55rem 0.75rem 0.7rem;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 0.3rem;
+  word-break: break-all;
+}
+
+.account-dropdown button {
+  width: 100%;
+  text-align: left;
+  border: 0;
+  background: transparent;
+  border-radius: 0.7rem;
+  padding: 0.7rem 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.account-dropdown button:hover {
+  background: #f5f0e8;
+}
+
+.menu-badge {
+  min-width: 1.3rem;
+  height: 1.3rem;
+  border-radius: 999px;
+  background: var(--fab);
+  color: white;
+  font-size: 0.7rem;
+  display: grid;
+  place-items: center;
+  padding: 0 0.35rem;
+}
+
+@media (min-width: 768px) {
+  .menu-icon-mobile {
+    display: none;
+  }
+
+  .menu-icon-desktop {
+    display: block;
+  }
 }
 
 .sheet-backdrop {
