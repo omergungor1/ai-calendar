@@ -72,6 +72,10 @@ export function isSameMonth(a, b) {
   return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth();
 }
 
+export function isPastDay(date, today = new Date()) {
+  return startOfDay(date).getTime() < startOfDay(today).getTime();
+}
+
 export function weekDays(date) {
   const start = startOfWeek(date);
   return Array.from({ length: 7 }, (_, i) => addDays(start, i));

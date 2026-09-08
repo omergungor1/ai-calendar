@@ -39,11 +39,13 @@ export function MonthView({ cursor, events, onSelectDay, onSelectEvent }) {
               className={classes}
               onClick={() => onSelectDay(day)}
             >
+            <span className="month-cell-top">
               <span className="month-date">{day.getDate()}</span>
-              <span className="month-count">
-                {dayEvents.length ? `${dayEvents.length} etkinlik` : ""}
-              </span>
-              <span className="month-chips">
+              {dayEvents.length > 0 ? (
+                <span className="month-badge">{dayEvents.length}</span>
+              ) : null}
+            </span>
+            <span className="month-chips">
                 {dayEvents.slice(0, 3).map((event) => (
                   <span
                     key={event.id}

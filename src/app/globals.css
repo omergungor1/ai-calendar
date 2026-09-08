@@ -171,7 +171,39 @@ textarea:focus {
 }
 
 .week-col.is-today {
-  border-color: var(--accent);
+  border: 2px solid var(--accent);
+  background: #ecfdf8;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent);
+}
+
+.week-col.is-today .week-col-head {
+  background: var(--accent);
+  color: white;
+  padding-bottom: 0.65rem;
+}
+
+.week-col.is-today .week-col-head strong {
+  color: white;
+  font-size: 1.45rem;
+}
+
+.today-label {
+  font-style: normal;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.week-col.is-past {
+  background: #ebe4d8;
+  border-color: transparent;
+  opacity: 0.58;
+}
+
+.week-col.is-past .week-col-head,
+.week-col.is-past .week-col-head strong {
+  color: #8a8173;
 }
 
 .week-col-head {
@@ -269,7 +301,7 @@ textarea:focus {
   padding: 0.4rem;
   display: flex;
   flex-direction: column;
-  gap: 0.2rem;
+  gap: 0.35rem;
 }
 
 .month-cell.is-outside {
@@ -277,16 +309,48 @@ textarea:focus {
 }
 
 .month-cell.is-today {
-  border-color: var(--accent);
+  border: 2px solid var(--accent);
+  background: #ecfdf8;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 20%, transparent);
+}
+
+.month-cell-top {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.3rem;
 }
 
 .month-date {
   font-weight: 700;
+  min-width: 1.6rem;
+  height: 1.6rem;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
 }
 
-.month-count {
-  font-size: 0.68rem;
-  color: var(--muted);
+.month-cell.is-today .month-date {
+  background: var(--accent);
+  color: white;
+}
+
+.month-badge {
+  min-width: 1.35rem;
+  height: 1.35rem;
+  padding: 0 0.3rem;
+  border-radius: 999px;
+  background: var(--ink);
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+  line-height: 1;
+}
+
+.month-cell.is-today .month-badge {
+  background: var(--accent);
 }
 
 .month-chips {

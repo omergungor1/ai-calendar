@@ -1,6 +1,6 @@
 "use client";
 
-import { eventsOnDay, formatTime, isSameDay, WEEKDAY_SHORT, weekDays } from "@/lib/dates";
+import { eventsOnDay, formatTime, isPastDay, isSameDay, WEEKDAY_SHORT, weekDays } from "@/lib/dates";
 import { eventColor } from "@/lib/event-colors";
 
 export function WeekView({ cursor, events, onSelectDay, onSelectEvent }) {
@@ -11,10 +11,17 @@ export function WeekView({ cursor, events, onSelectDay, onSelectEvent }) {
     <div className="week-grid">
       {days.map((day) => {
         const dayEvents = eventsOnDay(events, day);
-        const todayClass = isSameDay(day, today) ? "is-today" : "";
+        const isToday = isSameDay(day, today);
+        const classes = [
+          "week-col",
+          isToday ? "is-today" : "",
+          !isToday && isPastDay(day, today) ? "is-past" : "",
+        ]
+          .filter(Boolean)
+          .join(" ");
 
         return (
-          <section key={day.toISOString()} className={`week-col ${todayClass}`}>
+          <section key={day.toISOString()} className={classes}>
             <button
               type="button"
               className="week-col-head"
@@ -22,6 +29,7 @@ export function WeekView({ cursor, events, onSelectDay, onSelectEvent }) {
             >
               <span>{WEEKDAY_SHORT[(day.getDay() + 6) % 7]}</span>
               <strong>{day.getDate()}</strong>
+              {isToday ? <em className="today-label">Bugün</em> : null}
             </button>
             <div className="week-col-body">
               {dayEvents.length === 0 ? (
