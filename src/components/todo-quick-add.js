@@ -14,7 +14,7 @@ export function TodoQuickAdd({ onClose, onSubmit, saving, error }) {
   }
 
   return (
-    <Modal title="Yapılacak ekle" onClose={onClose}>
+    <Modal title="Yapılacak ekle" center onClose={onClose}>
       <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
         <label className="field">
           Başlık

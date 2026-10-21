@@ -3,17 +3,21 @@
 import { EVENT_COLORS } from "@/lib/event-colors";
 import { IconClose } from "@/components/icons";
 
-export function Modal({ title, onClose, children, wide = false }) {
+export function Modal({ title, onClose, children, wide = false, center = false }) {
   return (
-    <div className="sheet-backdrop" role="presentation" onClick={onClose}>
+    <div
+      className={`sheet-backdrop${center ? " is-center" : ""}`}
+      role="presentation"
+      onClick={onClose}
+    >
       <div
         role="dialog"
         aria-modal="true"
         aria-label={title}
-        className={`sheet ${wide ? "sheet-wide" : ""}`}
+        className={`sheet${wide ? " sheet-wide" : ""}${center ? " is-center" : ""}`}
         onClick={(event) => event.stopPropagation()}
       >
-        <div className="sheet-handle" />
+        {center ? null : <div className="sheet-handle" />}
         <div className="flex items-start justify-between gap-4">
           <h2 className="text-lg font-semibold tracking-tight">{title}</h2>
           <button

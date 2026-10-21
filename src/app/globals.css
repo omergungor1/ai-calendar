@@ -24,6 +24,13 @@ html {
 html,
 body {
   height: 100%;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
 }
 
 body {
@@ -41,7 +48,8 @@ select {
 }
 
 input,
-textarea {
+textarea,
+select {
   width: 100%;
   border: 1px solid var(--line);
   background: #fff;
@@ -49,6 +57,7 @@ textarea {
   border-radius: 0.8rem;
   padding: 0.7rem 0.85rem;
   outline: none;
+  font-size: 16px;
 }
 
 input::placeholder,
@@ -67,6 +76,12 @@ textarea:focus {
   display: flex;
   flex-direction: column;
   padding: 1rem 1rem 6rem;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.app-shell::-webkit-scrollbar {
+  display: none;
 }
 
 .app-header {
@@ -417,6 +432,12 @@ textarea:focus {
   gap: 0.4rem;
   overflow: auto;
   margin-bottom: 1rem;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.year-list::-webkit-scrollbar {
+  display: none;
 }
 
 .year-pill,
@@ -665,6 +686,10 @@ textarea:focus {
   padding: 1rem;
 }
 
+.sheet-backdrop.is-center {
+  align-items: center;
+}
+
 .sheet {
   width: min(36rem, 100%);
   background: var(--card);
@@ -675,6 +700,17 @@ textarea:focus {
   gap: 1rem;
   max-height: 92dvh;
   overflow: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.sheet::-webkit-scrollbar {
+  display: none;
+}
+
+.sheet.is-center {
+  border-radius: 1.4rem;
+  max-height: min(92dvh, calc(100% - 2rem));
 }
 
 .sheet-handle {
