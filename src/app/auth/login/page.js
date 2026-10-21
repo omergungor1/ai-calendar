@@ -6,12 +6,10 @@ export default function LoginPage() {
     <main className="mx-auto flex min-h-full w-full max-w-md flex-col justify-center gap-6 px-6 py-16">
       <div className="flex flex-col gap-2">
         <h1 className="text-2xl font-semibold tracking-tight">Giriş yap</h1>
-        <p className="text-sm text-zinc-600 dark:text-zinc-400">
-          Takvimine ulaşmak için hesabınla giriş yap.
-        </p>
+        <p className="muted">Takvimine ulaşmak için hesabınla giriş yap.</p>
       </div>
       <LoginForm />
-      <p className="text-sm text-zinc-600 dark:text-zinc-400">
+      <p className="muted">
         Hesabın yok mu?{" "}
         <Link href="/auth/sign-up" className="font-medium underline">
           Kayıt ol

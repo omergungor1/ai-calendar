@@ -3,8 +3,7 @@
 import { useState } from "react";
 import { IconArchive, IconCheck } from "@/components/icons";
 
-export function TodosView({ todos, onAdd, onUpdate, busy }) {
-  const [title, setTitle] = useState("");
+export function TodosView({ todos, onUpdate }) {
   const [tab, setTab] = useState("pending");
 
   const pending = todos.filter((item) => item.status === "pending");
@@ -12,27 +11,8 @@ export function TodosView({ todos, onAdd, onUpdate, busy }) {
   const archived = todos.filter((item) => item.status === "archived");
   const list = tab === "pending" ? pending : tab === "done" ? done : archived;
 
-  async function handleSubmit(event) {
-    event.preventDefault();
-    const next = title.trim();
-    if (!next) return;
-    await onAdd(next);
-    setTitle("");
-  }
-
   return (
     <div className="panel">
-      <form className="todo-add" onSubmit={handleSubmit}>
-        <input
-          value={title}
-          onChange={(event) => setTitle(event.target.value)}
-          placeholder="Yapılacak ekle"
-        />
-        <button type="submit" className="btn-primary" disabled={busy}>
-          Ekle
-        </button>
-      </form>
-
       <p className="muted">Bekleyenler her zaman bu listede durur.</p>
 
       <div className="seg">

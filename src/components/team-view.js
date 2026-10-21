@@ -27,7 +27,7 @@ export function TeamView({
 
   return (
     <div className="panel">
-      <form className="todo-add" onSubmit={handleInvite}>
+      <form className="invite-form" onSubmit={handleInvite}>
         <input
           type="email"
           required
@@ -53,7 +53,7 @@ export function TeamView({
             {incoming.map((invite) => (
               <li key={invite.id} className="stack-row">
                 <span>{invite.inviter_name || invite.inviter_id}</span>
-                <span className="flex gap-2">
+                <span className="stack-actions">
                   <button
                     type="button"
                     className="btn-primary"

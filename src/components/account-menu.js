@@ -2,16 +2,30 @@
 
 import { useEffect, useRef, useState } from "react";
 import { logout } from "@/app/auth/actions";
-import { IconMenu, IconUser } from "@/components/icons";
+import { IconMenu } from "@/components/icons";
+import { avatarColor, avatarLetter } from "@/lib/avatar";
 
-export function AccountMenu({ email, onNavigate, inviteCount }) {
-  const [open, setOpen] = useState(false);
+export function AccountMenu({
+  email,
+  displayName,
+  userId,
+  inviteCount,
+  friends,
+  selectedOwnerId,
+  onNavigate,
+  onSelectOwner,
+}) {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [userOpen, setUserOpen] = useState(false);
   const rootRef = useRef(null);
+  const letter = avatarLetter(displayName, email);
+  const color = avatarColor(userId || email);
 
   useEffect(() => {
     function onPointerDown(event) {
       if (!rootRef.current?.contains(event.target)) {
-        setOpen(false);
+        setMenuOpen(false);
+        setUserOpen(false);
       }
     }
 
@@ -21,7 +35,14 @@ export function AccountMenu({ email, onNavigate, inviteCount }) {
 
   function go(tab) {
     onNavigate(tab);
-    setOpen(false);
+    setMenuOpen(false);
+    setUserOpen(false);
+  }
+
+  function pickCalendar(id) {
+    onSelectOwner(id);
+    setMenuOpen(false);
+    setUserOpen(false);
   }
 
   return (
@@ -30,15 +51,36 @@ export function AccountMenu({ email, onNavigate, inviteCount }) {
         type="button"
         className="account-trigger"
         aria-label="Menü"
-        aria-expanded={open}
-        onClick={() => setOpen((value) => !value)}
+        aria-expanded={menuOpen}
+        onClick={() => {
+          setMenuOpen((value) => !value);
+          setUserOpen(false);
+        }}
       >
-        <IconMenu className="menu-icon-mobile h-6 w-6" />
-        <IconUser className="menu-icon-desktop h-6 w-6" />
+        <IconMenu className="h-6 w-6" />
       </button>
-      {open ? (
+      <button
+        type="button"
+        className="user-avatar"
+        aria-label="Hesap ve takvimler"
+        aria-expanded={userOpen}
+        style={{ background: color }}
+        onClick={() => {
+          setUserOpen((value) => !value);
+          setMenuOpen(false);
+        }}
+      >
+        {letter}
+      </button>
+
+      {menuOpen ? (
         <div className="account-dropdown">
-          <p className="account-email">{email}</p>
+          <div className="account-identity">
+            <p className="account-email">{displayName || email}</p>
+            {displayName && email ? (
+              <p className="account-email-sub">{email}</p>
+            ) : null}
+          </div>
           <button type="button" onClick={() => go("takvim")}>
             Takvim
           </button>
@@ -54,6 +96,41 @@ export function AccountMenu({ email, onNavigate, inviteCount }) {
           <form action={logout}>
             <button type="submit">Çıkış</button>
           </form>
+        </div>
+      ) : null}
+
+      {userOpen ? (
+        <div className="account-dropdown">
+          <div className="account-identity">
+            <p className="account-email">{displayName || email}</p>
+            {displayName && email ? (
+              <p className="account-email-sub">{email}</p>
+            ) : null}
+          </div>
+          <p className="menu-section">Takvimler</p>
+          <button
+            type="button"
+            className={selectedOwnerId === userId ? "is-active" : ""}
+            onClick={() => pickCalendar(userId)}
+          >
+            Benim takvimim
+          </button>
+          {friends.map((friend) => (
+            <button
+              key={friend.id}
+              type="button"
+              className={selectedOwnerId === friend.id ? "is-active" : ""}
+              onClick={() => pickCalendar(friend.id)}
+            >
+              {friend.display_name || friend.email}
+            </button>
+          ))}
+          {friends.length === 0 ? (
+            <p className="menu-empty">Henüz onaylı ekip yok.</p>
+          ) : null}
+          <button type="button" onClick={() => go("ekip")}>
+            Ekibi yönet
+          </button>
         </div>
       ) : null}
     </div>

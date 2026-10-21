@@ -17,6 +17,10 @@
   --font-mono: var(--font-geist-mono);
 }
 
+html {
+  color-scheme: light;
+}
+
 html,
 body {
   height: 100%;
@@ -33,16 +37,24 @@ input,
 textarea,
 select {
   font: inherit;
+  color: inherit;
 }
 
 input,
 textarea {
   width: 100%;
   border: 1px solid var(--line);
-  background: white;
+  background: #fff;
+  color: var(--ink);
   border-radius: 0.8rem;
   padding: 0.7rem 0.85rem;
   outline: none;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--muted);
+  opacity: 1;
 }
 
 input:focus,
@@ -74,10 +86,40 @@ textarea:focus {
   color: var(--muted);
 }
 
+.app-header > div:first-child {
+  min-width: 0;
+}
+
 .app-header h1 {
   font-size: 1.55rem;
   line-height: 1.15;
   font-weight: 650;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-shrink: 0;
+}
+
+.app-toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(6.2rem + env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  z-index: 80;
+  background: var(--ink);
+  color: white;
+  padding: 0.75rem 1.15rem;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 650;
+  box-shadow: 0 10px 28px rgba(28, 25, 23, 0.2);
+  pointer-events: none;
+  white-space: nowrap;
 }
 
 .toolbar {
@@ -383,6 +425,10 @@ textarea:focus {
   background: white;
   border-radius: 999px;
   padding: 0.4rem 0.8rem;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .year-pill.is-active,
@@ -429,21 +475,33 @@ textarea:focus {
 
 .account-menu {
   position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
 }
 
-.account-trigger {
+.account-trigger,
+.user-avatar {
   width: 2.7rem;
   height: 2.7rem;
-  border: 1px solid var(--line);
-  background: white;
   border-radius: 999px;
   display: grid;
   place-items: center;
+  flex-shrink: 0;
+}
+
+.account-trigger {
+  border: 1px solid var(--line);
+  background: white;
   color: var(--ink);
 }
 
-.menu-icon-desktop {
-  display: none;
+.user-avatar {
+  border: 0;
+  color: white;
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 0.02em;
 }
 
 .account-dropdown {
@@ -458,19 +516,47 @@ textarea:focus {
   box-shadow: 0 12px 32px rgba(28, 25, 23, 0.12);
   display: flex;
   flex-direction: column;
+  z-index: 30;
 }
 
 .account-dropdown form {
   width: 100%;
 }
 
-.account-email {
-  font-size: 0.8rem;
-  color: var(--muted);
-  padding: 0.55rem 0.75rem 0.7rem;
+.account-identity {
   border-bottom: 1px solid var(--line);
   margin-bottom: 0.3rem;
-  word-break: break-all;
+  padding-bottom: 0.35rem;
+}
+
+.account-email {
+  font-size: 0.9rem;
+  color: var(--ink);
+  font-weight: 650;
+  padding: 0.55rem 0.75rem 0.15rem;
+  word-break: break-word;
+}
+
+.account-email-sub {
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--muted);
+  padding: 0 0.75rem 0.45rem;
+}
+
+.menu-section {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 0.55rem 0.75rem 0.2rem;
+}
+
+.menu-empty {
+  font-size: 0.8rem;
+  color: var(--muted);
+  padding: 0.4rem 0.75rem 0.7rem;
 }
 
 .account-dropdown button {
@@ -490,6 +576,12 @@ textarea:focus {
   background: #f5f0e8;
 }
 
+.account-dropdown button.is-active {
+  background: #ecfdf8;
+  color: var(--accent);
+  font-weight: 650;
+}
+
 .menu-badge {
   min-width: 1.3rem;
   height: 1.3rem;
@@ -502,13 +594,63 @@ textarea:focus {
   padding: 0 0.35rem;
 }
 
-@media (min-width: 768px) {
-  .menu-icon-mobile {
-    display: none;
+.todo-add,
+.invite-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  align-items: stretch;
+}
+
+.todo-add input,
+.invite-form input {
+  flex: 1 1 12rem;
+  min-width: 0;
+  min-height: 2.8rem;
+}
+
+.todo-add .btn-primary,
+.invite-form .btn-primary {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.stack-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+@media (max-width: 520px) {
+  .todo-add,
+  .invite-form {
+    flex-direction: column;
+    align-items: stretch;
   }
 
-  .menu-icon-desktop {
-    display: block;
+  .todo-add input,
+  .invite-form input {
+    flex: none;
+    width: 100%;
+  }
+
+  .todo-add .btn-primary,
+  .invite-form .btn-primary {
+    width: 100%;
+  }
+
+  .stack-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .stack-actions {
+    width: 100%;
+  }
+
+  .stack-actions .btn-primary,
+  .stack-actions .btn-ghost {
+    flex: 1;
   }
 }
 
@@ -622,7 +764,6 @@ textarea:focus {
   }
 }
 
-.todo-add,
 .stack-row,
 .day-item {
   display: flex;

@@ -6,12 +6,10 @@ export default function SignUpPage() {
     <main className="mx-auto flex min-h-full w-full max-w-md flex-col justify-center gap-6 px-6 py-16">
       <div className="flex flex-col gap-2">
         <h1 className="text-2xl font-semibold tracking-tight">Kayıt ol</h1>
-        <p className="text-sm text-zinc-600 dark:text-zinc-400">
-          E-posta ve şifre ile yeni bir hesap oluştur.
-        </p>
+        <p className="muted">E-posta ve şifre ile yeni bir hesap oluştur.</p>
       </div>
       <SignUpForm />
-      <p className="text-sm text-zinc-600 dark:text-zinc-400">
+      <p className="muted">
         Zaten hesabın var mı?{" "}
         <Link href="/auth/login" className="font-medium underline">
           Giriş yap

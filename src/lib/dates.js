@@ -141,9 +141,9 @@ export function formatWeekRange(date) {
   const end = addDays(start, 6);
   const sameMonth = start.getMonth() === end.getMonth();
   if (sameMonth) {
-    return `${start.getDate()}–${end.getDate()} ${MONTH_NAMES[start.getMonth()]} ${start.getFullYear()}`;
+    return `${start.getDate()}–${end.getDate()} ${MONTH_NAMES[start.getMonth()]}`;
   }
-  return `${start.getDate()} ${MONTH_NAMES[start.getMonth()]} – ${end.getDate()} ${MONTH_NAMES[end.getMonth()]} ${end.getFullYear()}`;
+  return `${start.getDate()} ${MONTH_NAMES[start.getMonth()]} – ${end.getDate()} ${MONTH_NAMES[end.getMonth()]}`;
 }
 
 export function formatTime(date) {

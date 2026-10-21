@@ -14,6 +14,22 @@ const geistMono = Geist_Mono({
 export const metadata = {
   title: "Takvim",
   description: "Haftalık takvim, ekip ve yapılacaklar",
+  applicationName: "Takvim",
+  appleWebApp: {
+    capable: true,
+    title: "Takvim",
+    statusBarStyle: "default",
+  },
+  other: {
+    "apple-mobile-web-app-capable": "yes",
+  },
+};
+
+export const viewport = {
+  themeColor: "#f4efe6",
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({ children }) {

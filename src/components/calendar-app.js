@@ -1,13 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import {
   formatWeekRange,
   MONTH_NAMES,
   startOfMonth,
 } from "@/lib/dates";
-import { IconPlus } from "@/components/icons";
+import { IconPlus, IconTodo } from "@/components/icons";
 import { WeekView } from "@/components/week-view";
 import { MonthView } from "@/components/month-view";
 import { YearView } from "@/components/year-view";
@@ -38,6 +38,8 @@ export function CalendarApp({ user, profile }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [sheet, setSheet] = useState(null);
+  const [toast, setToast] = useState("");
+  const toastTimerRef = useRef(null);
 
   const mine = ownerId === user.id;
   const myEmail = (user.email || "").toLowerCase();
@@ -121,6 +123,10 @@ export function CalendarApp({ user, profile }) {
       cancelled = true;
     };
   }, [supabase, user.id]);
+
+  useEffect(() => {
+    return () => window.clearTimeout(toastTimerRef.current);
+  }, []);
 
   const incoming = invites
     .filter(
@@ -298,6 +304,12 @@ export function CalendarApp({ user, profile }) {
     await loadTeam();
   }
 
+  function showToast(message) {
+    setToast(message);
+    window.clearTimeout(toastTimerRef.current);
+    toastTimerRef.current = window.setTimeout(() => setToast(""), 3200);
+  }
+
   return (
     <div className="app-shell">
       <header className="app-header">
@@ -307,11 +319,33 @@ export function CalendarApp({ user, profile }) {
             <p className="muted">{ownerLabel} · salt okunur</p>
           ) : null}
         </div>
-        <AccountMenu
-          email={user.email}
-          inviteCount={incoming.length}
-          onNavigate={setTab}
-        />
+        <div className="header-actions">
+          <button
+            type="button"
+            className="account-trigger"
+            aria-label="Yapılacak ekle"
+            onClick={() => {
+              setError("");
+              setSheet({ type: "todo" });
+            }}
+          >
+            <IconTodo className="h-6 w-6" />
+          </button>
+          <AccountMenu
+            email={user.email}
+            displayName={profile?.display_name}
+            userId={user.id}
+            inviteCount={incoming.length}
+            friends={friends}
+            selectedOwnerId={ownerId}
+            onNavigate={setTab}
+            onSelectOwner={(id) => {
+              setOwnerId(id);
+              setTab("takvim");
+              setView("week");
+            }}
+          />
+        </div>
       </header>
 
       {tab === "takvim" ? (
@@ -396,12 +430,7 @@ export function CalendarApp({ user, profile }) {
           />
         ) : null}
         {tab === "todos" ? (
-          <TodosView
-            todos={todos}
-            onAdd={addTodo}
-            onUpdate={updateTodo}
-            busy={busy}
-          />
+          <TodosView todos={todos} onUpdate={updateTodo} />
         ) : null}
         {tab === "ekip" ? (
           <TeamView
@@ -476,7 +505,7 @@ export function CalendarApp({ user, profile }) {
             const ok = await addTodo(title);
             if (ok) {
               setSheet(null);
-              setTab("todos");
+              showToast("Yapılacak eklendi");
             }
           }}
         />
@@ -546,6 +575,12 @@ export function CalendarApp({ user, profile }) {
           onClose={() => setSheet(null)}
           onSelectEvent={(event) => setSheet({ type: "detail", event })}
         />
+      ) : null}
+
+      {toast ? (
+        <div className="app-toast" role="status" aria-live="polite">
+          {toast}
+        </div>
       ) : null}
     </div>
   );
